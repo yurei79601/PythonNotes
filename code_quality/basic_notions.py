@@ -3,15 +3,15 @@ This part should write down a simpy introduction to this file
 """
 
 
-def my_function(var1:int, var2:int) -> int:
+def my_function(var1: int, var2: int) -> int:
     """
     Brief description of the goal of this function
 
     Args:
         To give the statement or explain the meaning of arguments
         - var1: explain meaning of var1
-        - var2: explain meaning of var2 ... 
-    
+        - var2: explain meaning of var2 ...
+
     Returns:
         To describe what would return after use of this function
 
