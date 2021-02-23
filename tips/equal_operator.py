@@ -4,16 +4,7 @@ reference: [link](https://medium.com/swlh/is-and-in-python-f084f36cbc0e)
 """
 import sys
 import time
-
-
-def time_calculator(function):
-    def wrap(*args, **kwargs):
-        start = time.time()
-        output = function(*args, **kwargs)
-        end = time.time()
-        print('{} cost {} seconds'.format(function.__name__, end-start))
-        return output
-    return wrap
+from yurei_utils import time_calculator
 
 
 @time_calculator

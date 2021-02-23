@@ -2,6 +2,7 @@
 some interesting functions built by yurei
 
 1. df_to_markdown
+2. time_calculator
 """
 import pandas as pd
 
@@ -74,3 +75,13 @@ def df_to_markdown(df: pd.DataFrame) -> str:
     for i in range(df.shape[0]):
         s += get_markdown_table_values(list(df.loc[i, :])) + '\n'
     return s
+
+
+def time_calculator(function):
+    def wrap(*args, **kwargs):
+        start = time.time()
+        output = function(*args, **kwargs)
+        end = time.time()
+        print('{} cost {} seconds'.format(function.__name__, end-start))
+        return output
+    return wrap
