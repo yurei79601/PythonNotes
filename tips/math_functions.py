@@ -4,7 +4,16 @@ from numba import njit, prange
 
 
 @njit(fastmath=True, cache=True)
-def is_prime(num):
+def is_prime(num: int) -> bool:
+    """
+    To determine the input integer is prime or not
+
+    Args:
+        num: an input integer
+
+    Returns:
+        bool (True/False)
+    """
     if num == 2:
         return True
     if num <= 1 or not num % 2:
@@ -16,7 +25,10 @@ def is_prime(num):
 
 
 @njit(fastmath=True, cache=True, parallel=True)
-def run_program(N):
+def run_program(N: int):
+    """
+    To check each integer is prime or not in range(N) by loop
+    """
     for i in prange(N):
         is_prime(i)
 
