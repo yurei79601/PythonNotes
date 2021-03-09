@@ -3,6 +3,7 @@ some interesting functions built by yurei
 
 1. df_to_markdown
 2. time_calculator
+3. market_value_after_exclude_dividend_right
 """
 import time
 import pandas as pd
