@@ -4,6 +4,7 @@ some interesting functions built by yurei
 1. df_to_markdown
 2. time_calculator
 """
+import time
 import pandas as pd
 
 
@@ -85,3 +86,31 @@ def time_calculator(function):
         print('{} cost {} seconds'.format(function.__name__, end-start))
         return output
     return wrap
+
+
+def get_stock_earned_after_exclude_right(shares: int, stock_dividends: float) -> float:
+    """
+    取得經過除權後，會得到有多少股
+
+    Args:
+        shares: 股數
+        stock_dividends: 股利
+
+    Returns:
+        除權後的所獲的股數
+    """
+    return (shares * stock_dividends)/10
+
+
+def get_cash_earned_after_exclude_dividend(shares: int, cash_dividends: float) -> float:
+    """
+    經過除息後，會得到多少現金股息
+
+    Args:
+        shares: 股數
+        cash_dividends: 股息
+
+    Returns:
+        除權後所得到個現金股息
+    """
+    return shares * cash_dividends
