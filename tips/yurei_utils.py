@@ -114,3 +114,26 @@ def get_cash_earned_after_exclude_dividend(shares: int, cash_dividends: float) -
         除權後所得到個現金股息
     """
     return shares * cash_dividends
+
+
+def market_value_after_exclude_dividend_right(shares: int,
+                                              stock_dividends: float,
+                                              cash_dividends: float,
+                                              market_value_per_share: float
+                                             ) -> float:
+    """
+    根據現在的股數、股價以及配股配息的數量，計算之後會有多少總資產
+
+    Args:
+        shares: 股數
+        stock_dividends: 股利
+        cash_dividends: 股息
+        market_value_share: 股票現值
+
+    Returns:
+        除權息後的資產總量
+    """
+    stock_earned = get_stock_earned_after_exclude_right(shares, stock_dividends)
+    cash_earned = get_cash_earned_after_exclude_dividend(shares, cash_dividends)
+    return (shares + stock_earned) * market_value_per_share + cash_earned
+
