@@ -132,11 +132,11 @@ class NeuralNetworkModel(object):
             print("Testing")
             x_test, y_test = load_data("test")
             feed_dict_test = {
-                {self.x: x_test[:1000], self.y: y_test[:1000]}
+                self.x: x_test[:1000], self.y: y_test[:1000]
             }
             loss_test, acc_test, y_pred = \
-                sess.run(
-                    [loss, accuracy, output_logits],
+                self.session.run(
+                    [self.loss, self.accuracy, self.output_logits],
                     feed_dict=feed_dict_test)
         print('---------------------------------------------------------')
         print("Test loss: {0:.2f}, test accuracy: {1:.01%}".format(loss_test, acc_test))
@@ -145,4 +145,4 @@ class NeuralNetworkModel(object):
 
 if __name__ == "__main__":
     NN_Model = NeuralNetworkModel("./", 10)
-    NN_Model.train()
+    NN_Model.test()
