@@ -66,15 +66,15 @@ class NeuralNetworkModel(object):
         with self.session.as_default():
             print("Training")
             self.session.run(self.init)
-            # Number of training iterations in each epoch
+            # Number of training steps in each epoch
             steps_per_epoch = int(len(y_data) / self.batch_size)
             for epoch in range(self.epochs):
                 print("Training epoch: {}".format(epoch + 1))
                 # Randomly shuffle the training data at the beginning of each epoch
                 x_train, y_train = randomize(x_data, y_data)
-                for iteration in range(steps_per_epoch):
-                    start = iteration * self.batch_size
-                    end = (iteration + 1) * self.batch_size
+                for step in range(steps_per_epoch):
+                    start = step * self.batch_size
+                    end = (step + 1) * self.batch_size
                     x_batch, y_batch = get_next_batch(
                         x_train, y_train, start, end
                     )
@@ -83,7 +83,7 @@ class NeuralNetworkModel(object):
                     feed_dict_batch = {self.x: x_batch, self.y: y_batch}
                     self.session.run(self.optimizer, feed_dict=feed_dict_batch)
 
-                    if iteration % self.display_freq == 0:
+                    if step % self.display_freq == 0:
                         # Calculate and display the batch loss and accuracy
                         loss_batch, acc_batch = self.session.run(
                             [self.loss, self.accuracy],
@@ -92,7 +92,7 @@ class NeuralNetworkModel(object):
 
                         print(
                             "iter {0:3d}:\t Loss={1:.2f},\tTraining Accuracy={2:.01%}".format(
-                                iteration, loss_batch, acc_batch
+                                step, loss_batch, acc_batch
                             )
                         )
                 # Run validation after every epoch
