@@ -15,7 +15,8 @@ class NeuralNetworkModel(object):
         self.img_h, self.img_w = 28, 28
         self.img_size_flat = self.img_h * self.img_w
         self.n_classes = n_classes
-        self.save_path = os.path.join(model_path, "twolayernetwork")
+        self.model_path = model_path
+        self.save_path = os.path.join(self.model_path, "twolayernetwork")
         self.session = tf.InteractiveSession()
 
         with self.session.as_default():
@@ -35,7 +36,7 @@ class NeuralNetworkModel(object):
             ckpt = tf.train.latest_checkpoint(self.model_path)
             if ckpt:
                 print("Checkpoint is valid")
-                self.step = int(ckpt.split("-")[1])
+                self.step = int(ckpt.split('/')[-1].split('-')[1])
                 self.saver.restore(self.session, ckpt)
 
 
