@@ -91,7 +91,7 @@ class NeuralNetworkModel(object):
                         )
 
                         print(
-                            "iter {0:3d}:\t Loss={1:.2f},\tTraining Accuracy={2:.01%}".format(
+                            "step {0:3d}:\t Loss={1:.2f},\tTraining Accuracy={2:.01%}".format(
                                 step, loss_batch, acc_batch
                             )
                         )
