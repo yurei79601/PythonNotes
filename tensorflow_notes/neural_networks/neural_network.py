@@ -132,7 +132,7 @@ class NeuralNetworkModel(object):
             print("Testing")
             x_test, y_test = load_data("test")
             feed_dict_test = {
-                {x: x_test[:1000], y: y_test[:1000]}
+                {self.x: x_test[:1000], self.y: y_test[:1000]}
             }
             loss_test, acc_test, y_pred = \
                 sess.run(
