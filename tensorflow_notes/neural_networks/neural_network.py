@@ -30,6 +30,15 @@ class NeuralNetworkModel(object):
             ) = self.model()
             self.init.run()
 
+        with self.session.as_default():
+            self.saver = tf.train.Saver()
+            ckpt = tf.train.latest_checkpoint(self.model_path)
+            if ckpt:
+                print("Checkpoint is valid")
+                self.step = int(ckpt.split("-")[1])
+                self.saver.restore(self.session, ckpt)
+
+
     def model(self):
         x = tf.placeholder(
             tf.float32, shape=[None, self.img_size_flat], name="X"
@@ -115,8 +124,7 @@ class NeuralNetworkModel(object):
                     "---------------------------------------------------------"
                 )
 
-        saver = tf.train.Saver()
-        saver.save(self.session, self.save_path, global_step=self.epochs)
+        self.saver.save(self.session, self.save_path, global_step=self.epochs)
 
     def test(self):
         with self.session.as_default():
