@@ -24,6 +24,7 @@ class NeuralNetworkModel(object):
                 self.x,
                 self.y,
                 self.loss,
+                self.output_logits,
                 self.optimizer,
                 self.accuracy,
                 self.cls_prediction,
@@ -69,7 +70,7 @@ class NeuralNetworkModel(object):
         # Network predictions
         cls_prediction = tf.argmax(output_logits, axis=1, name="predictions")
         init = tf.global_variables_initializer()
-        return x, y, loss, optimizer, accuracy, cls_prediction, init
+        return x, y, output_logits, loss, optimizer, accuracy, cls_prediction, init
 
     def train(self):
         x_data, y_data, x_valid, y_valid = load_data("train")
