@@ -23,8 +23,8 @@ class NeuralNetworkModel(object):
             (
                 self.x,
                 self.y,
-                self.loss,
                 self.output_logits,
+                self.loss,
                 self.optimizer,
                 self.accuracy,
                 self.cls_prediction,
