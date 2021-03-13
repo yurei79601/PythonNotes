@@ -67,12 +67,12 @@ class NeuralNetworkModel(object):
             print("Training")
             self.session.run(self.init)
             # Number of training iterations in each epoch
-            num_tr_iter = int(len(y_data) / self.batch_size)
+            steps_per_epoch = int(len(y_data) / self.batch_size)
             for epoch in range(self.epochs):
                 print("Training epoch: {}".format(epoch + 1))
                 # Randomly shuffle the training data at the beginning of each epoch
                 x_train, y_train = randomize(x_data, y_data)
-                for iteration in range(num_tr_iter):
+                for iteration in range(steps_per_epoch):
                     start = iteration * self.batch_size
                     end = (iteration + 1) * self.batch_size
                     x_batch, y_batch = get_next_batch(
