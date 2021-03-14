@@ -14,11 +14,15 @@ class DataManager:
 
         mnist = input_data.read_data_sets(self.data_path, one_hot=True)
         if mode == "train":
-            x_train = np.concatenate((mnist.train.images, mnist.validation.images), axis=0)
+            x_train = np.expand_dims(
+                np.concatenate((mnist.train.images, mnist.validation.images), axis=0), 2
+                )
             y_train = np.concatenate((mnist.train.labels, mnist.validation.labels), axis=0)
             return x_train, y_train
         elif mode == "test":
-            x_test, y_test = mnist.test.images, mnist.test.labels
+            x_test, y_test = \
+                np.expand_dims(mnist.test.images, 2),\
+                mnist.test.labels
             return x_test, y_test
 
 
