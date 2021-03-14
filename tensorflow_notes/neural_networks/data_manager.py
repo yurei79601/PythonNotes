@@ -1,26 +1,21 @@
 import numpy as np
 
 
-def load_data(mode="train"):
-    """
-    Function to (download and) load the MNIST data
-    :param mode: train or test
-    :return: images and the corresponding labels
-    """
-    from tensorflow.examples.tutorials.mnist import input_data
+class DataManager:
+    def __init__(self, data_path):
+        self.data_path = data_path
 
-    mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
-    if mode == "train":
-        x_train, y_train, x_valid, y_valid = (
-            mnist.train.images,
-            mnist.train.labels,
-            mnist.validation.images,
-            mnist.validation.labels,
-        )
-        return x_train, y_train, x_valid, y_valid
-    elif mode == "test":
-        x_test, y_test = mnist.test.images, mnist.test.labels
-    return x_test, y_test
+    def load_data(self, mode):
+        from tensorflow.examples.tutorials.mnist import input_data
+
+        mnist = input_data.read_data_sets(self.data_path, one_hot=True)
+        if mode == "train":
+            x_train = np.concatenate((mnist.train.images, mnist.validation.images), axis=0)
+            y_train = np.concatenate((mnist.train.labels, mnist.validation.labels), axis=0)
+            return x_train, y_train
+        elif mode == "test":
+            x_test, y_test = mnist.test.images, mnist.test.labels
+            return x_test, y_test
 
 
 def randomize(x, y):
