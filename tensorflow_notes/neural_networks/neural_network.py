@@ -4,18 +4,31 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from model_utils import weight_variable, bias_variable, fc_layer
 from data_manager import get_next_batch, randomize, DataManager
+import config
 
 
 class NeuralNetworkModel(object):
-    def __init__(self, model_path, data_path, n_classes):
-        self.epochs = 10  # Total number of training epochs
-        self.batch_size = 100  # Training batch size
-        self.display_freq = 100  # Frequency of displaying the training results
-        self.learning_rate = 0.001  # The optimization initial learning rate
-        self.h1 = 200  # number of nodes in the 1st hidden layer
-        self.img_h, self.img_w = 28, 28
+    def __init__(
+        self,
+        img_h,
+        img_w,
+        h1,
+        n_classes,
+        epochs,
+        batch_size,
+        display_freq,
+        learning_rate,
+        model_path,
+        data_path
+    ):
+        self.img_h, self.img_w = img_h, img_w
         self.img_size_flat = self.img_h * self.img_w
+        self.h1 = h1
         self.n_classes = n_classes
+        self.epochs = epochs
+        self.batch_size = batch_size
+        self.display_freq = display_freq
+        self.learning_rate = learning_rate
         self.model_path = model_path
         self.save_path = os.path.join(self.model_path, "twolayernetwork")
         self.session = tf.InteractiveSession()
@@ -152,6 +165,18 @@ class NeuralNetworkModel(object):
         print('---------------------------------------------------------')
         return np.argmax(y_pred, axis=1)
 
+
 if __name__ == "__main__":
-    NN_Model = NeuralNetworkModel("./", "MNIST_data/", 10)
+    NN_Model = NeuralNetworkModel(
+        config.img_h,
+        config.img_w,
+        config.h1,
+        config.n_classes,
+        config.epochs,
+        config.batch_size,
+        config.display_freq,
+        config.learning_rate,
+        config.model_path,
+        config.data_path)
+
     NN_Model.test()
