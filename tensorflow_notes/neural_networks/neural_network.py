@@ -12,6 +12,7 @@ class NeuralNetworkModel(object):
         self,
         img_h,
         img_w,
+        n_channels,
         h1,
         n_classes,
         epochs,
@@ -23,6 +24,7 @@ class NeuralNetworkModel(object):
     ):
         self.img_h, self.img_w = img_h, img_w
         self.img_size_flat = self.img_h * self.img_w
+        self.n_channels = n_channels
         self.h1 = h1
         self.n_classes = n_classes
         self.epochs = epochs
@@ -58,11 +60,13 @@ class NeuralNetworkModel(object):
 
     def model(self):
         x = tf.placeholder(
-            tf.float32, shape=[None, self.img_size_flat], name="X"
+            tf.float32, shape=[None, self.img_size_flat, self.n_channels], name="X"
         )
         y = tf.placeholder(tf.float32, shape=[None, self.n_classes], name="Y")
+        channel_matrix = weight_variable('channel_matrix', [self.n_channels, 1])
+        x_one_channel = tf.squeeze(tf.matmul(x, channel_matrix), 2)
         # Create a fully-connected layer with h1 nodes as hidden layer
-        fc1 = fc_layer(x, self.h1, "FC1", use_relu=True)
+        fc1 = fc_layer(x_one_channel, self.h1, "FC1", use_relu=True)
         # Create a fully-connected layer with n_classes nodes as output layer
         output_logits = fc_layer(fc1, self.n_classes, "OUT", use_relu=False)
         # Define the loss function, optimizer, and accuracy
@@ -170,6 +174,7 @@ if __name__ == "__main__":
     NN_Model = NeuralNetworkModel(
         config.img_h,
         config.img_w,
+        config.n_channels,
         config.h1,
         config.n_classes,
         config.epochs,
@@ -179,4 +184,4 @@ if __name__ == "__main__":
         config.model_path,
         config.data_path)
 
-    NN_Model.test()
+    NN_Model.train()
