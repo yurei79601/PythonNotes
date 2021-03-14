@@ -25,6 +25,21 @@ class DataManager:
                 mnist.test.labels
             return x_test, y_test
 
+    def load_cifar10_data(self, mode):
+        '''
+        Get cifar10 datasets from Keras
+        '''
+        import tensorflow as tf
+
+        if mode == 'train':
+            (x_train, y_train), (_, _) = tf.keras.datasets.cifar10.load_data()
+            n, h, w, c = x_train.shape
+            return np.reshape(x_train, (n, h*w, c)), one_hot_array(y_train)
+        elif mode == 'test':
+            (_, _), (x_valid, y_valid) = tf.keras.datasets.cifar10.load_data()
+            n, h, w, c = x_valid.shape
+            return np.reshape(x_valid, (n, h*w, c)), one_hot_array(y_valid)
+
 
 def randomize(x, y):
     """ Randomizes the order of data samples and their corresponding labels"""
@@ -38,3 +53,12 @@ def get_next_batch(x, y, start, end):
     x_batch = x[start:end]
     y_batch = y[start:end]
     return x_batch, y_batch
+
+
+def one_hot_array(arr: np.array) -> np.array:
+    '''
+    Transform array with labels to one-hot array
+    '''
+    num_classes = len(np.unique(arr))
+    num_sample = arr.shape[0]
+    return np.eye(num_classes)[arr].reshape(num_sample, num_classes)
