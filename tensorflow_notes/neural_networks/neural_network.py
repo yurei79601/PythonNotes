@@ -1,12 +1,13 @@
 import os
 import numpy as np
 import tensorflow as tf
+from sklearn.model_selection import train_test_split
 from model_utils import weight_variable, bias_variable, fc_layer
-from data_manager import load_data, get_next_batch, randomize
+from data_manager import get_next_batch, randomize, DataManager
 
 
 class NeuralNetworkModel(object):
-    def __init__(self, model_path, n_classes):
+    def __init__(self, model_path, data_path, n_classes):
         self.epochs = 10  # Total number of training epochs
         self.batch_size = 100  # Training batch size
         self.display_freq = 100  # Frequency of displaying the training results
@@ -18,6 +19,7 @@ class NeuralNetworkModel(object):
         self.model_path = model_path
         self.save_path = os.path.join(self.model_path, "twolayernetwork")
         self.session = tf.InteractiveSession()
+        self.data_manager = DataManager(data_path)
 
         with self.session.as_default():
             (
@@ -73,7 +75,12 @@ class NeuralNetworkModel(object):
         return x, y, output_logits, loss, optimizer, accuracy, cls_prediction, init
 
     def train(self):
-        x_data, y_data, x_valid, y_valid = load_data("train")
+        x_data, y_data = self.data_manager.load_data('train')
+        x_train, x_valid, y_train, y_valid = \
+            train_test_split(
+                x_data, y_data, test_size=0.1, random_state=123
+            )
+        # x_data, y_data, x_valid, y_valid = load_data("train")
         with self.session.as_default():
             print("Training")
             self.session.run(self.init)
@@ -131,7 +138,7 @@ class NeuralNetworkModel(object):
     def test(self):
         with self.session.as_default():
             print("Testing")
-            x_test, y_test = load_data("test")
+            x_test, y_test = self.data_manager.load_data("test")
             feed_dict_test = {
                 self.x: x_test[:1000], self.y: y_test[:1000]
             }
@@ -145,5 +152,5 @@ class NeuralNetworkModel(object):
         return np.argmax(y_pred, axis=1)
 
 if __name__ == "__main__":
-    NN_Model = NeuralNetworkModel("./", 10)
+    NN_Model = NeuralNetworkModel("./", "MNIST_data/", 10)
     NN_Model.test()
