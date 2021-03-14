@@ -5,6 +5,29 @@ create data for classification tasks
 import numpy as np
 
 
+def randomize(x, y):
+    """ Randomizes the order of data samples and their corresponding labels"""
+    permutation = np.random.permutation(y.shape[0])
+    shuffled_x = x[permutation, :]
+    shuffled_y = y[permutation]
+    return shuffled_x, shuffled_y
+
+
+def get_next_batch(x, y, start, end):
+    x_batch = x[start:end]
+    y_batch = y[start:end]
+    return x_batch, y_batch
+
+
+def one_hot_array(arr: np.array) -> np.array:
+    '''
+    Transform array with labels to one-hot array
+    '''
+    num_classes = len(np.unique(arr))
+    num_sample = arr.shape[0]
+    return np.eye(num_classes)[arr].reshape(num_sample, num_classes)
+
+
 class DataManager:
     def __init__(self, data_path):
         self.data_path = data_path
@@ -39,26 +62,3 @@ class DataManager:
             (_, _), (x_valid, y_valid) = tf.keras.datasets.cifar10.load_data()
             n, h, w, c = x_valid.shape
             return np.reshape(x_valid, (n, h*w, c)), one_hot_array(y_valid)
-
-
-def randomize(x, y):
-    """ Randomizes the order of data samples and their corresponding labels"""
-    permutation = np.random.permutation(y.shape[0])
-    shuffled_x = x[permutation, :]
-    shuffled_y = y[permutation]
-    return shuffled_x, shuffled_y
-
-
-def get_next_batch(x, y, start, end):
-    x_batch = x[start:end]
-    y_batch = y[start:end]
-    return x_batch, y_batch
-
-
-def one_hot_array(arr: np.array) -> np.array:
-    '''
-    Transform array with labels to one-hot array
-    '''
-    num_classes = len(np.unique(arr))
-    num_sample = arr.shape[0]
-    return np.eye(num_classes)[arr].reshape(num_sample, num_classes)
