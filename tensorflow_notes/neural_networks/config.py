@@ -2,11 +2,11 @@
 configuation setting for neural network model
 """
 
-img_h = img_w = 28  # MNIST images are 28x28
+img_h = img_w = 32  # MNIST images are 28x28
 
 img_size_flat = img_h * img_w  # 28x28=784, the total number of pixels
 
-n_channels = 1
+n_channels = 3
 
 h1 = 200  # number of nodes in the 1st hidden layer
 

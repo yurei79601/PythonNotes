@@ -92,7 +92,8 @@ class NeuralNetworkModel(object):
         return x, y, output_logits, loss, optimizer, accuracy, cls_prediction, init
 
     def train(self):
-        x_data, y_data = self.data_manager.load_data('train')
+        # x_data, y_data = self.data_manager.load_data('train')
+        x_data, y_data = self.data_manager.load_cifar10_data('train')
         x_train, x_valid, y_train, y_valid = \
             train_test_split(
                 x_data, y_data, test_size=0.1, random_state=123
