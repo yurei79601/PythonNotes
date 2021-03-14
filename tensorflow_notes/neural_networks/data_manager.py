@@ -1,3 +1,7 @@
+"""
+create data for classification tasks
+1. MNIST data
+"""
 import numpy as np
 
 
