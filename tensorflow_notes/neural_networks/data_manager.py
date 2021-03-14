@@ -1,6 +1,7 @@
 """
 create data for classification tasks
 1. MNIST data
+2. cifar 10 data
 """
 import numpy as np
 
