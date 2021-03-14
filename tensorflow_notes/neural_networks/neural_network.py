@@ -139,8 +139,9 @@ class NeuralNetworkModel(object):
         with self.session.as_default():
             print("Testing")
             x_test, y_test = self.data_manager.load_data("test")
+            select_index = np.random.choice(range(10000), 1000)
             feed_dict_test = {
-                self.x: x_test[:1000], self.y: y_test[:1000]
+                self.x: x_test[select_index], self.y: y_test[select_index]
             }
             loss_test, acc_test, y_pred = \
                 self.session.run(
