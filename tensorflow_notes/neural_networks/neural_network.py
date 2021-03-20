@@ -2,7 +2,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from model_utils import weight_variable, bias_variable, fc_layer
+from model_utils import fc_layer
 from data_manager import get_next_batch, randomize, DataManager
 import config
 
@@ -148,9 +148,7 @@ class NeuralNetworkModel(object):
                         epoch + 1, loss_valid, acc_valid
                     )
                 )
-                print(
-                    "---------------------------------------------------------"
-                )
+                print("---------------------------------------------------------")
 
         self.saver.save(self.session, self.save_path, global_step=self.epochs)
 
