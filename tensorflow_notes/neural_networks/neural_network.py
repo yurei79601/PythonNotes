@@ -134,8 +134,8 @@ class NeuralNetworkModel(object):
                         )
                 # Run validation after every epoch
                 feed_dict_valid = {
-                    self.x: x_valid[:1000],
-                    self.y: y_valid[:1000],
+                    self.x: x_valid,
+                    self.y: y_valid,
                 }
                 loss_valid, acc_valid = self.session.run(
                     [self.loss, self.accuracy], feed_dict=feed_dict_valid
