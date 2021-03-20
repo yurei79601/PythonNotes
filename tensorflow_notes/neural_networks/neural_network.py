@@ -13,7 +13,7 @@ class NeuralNetworkModel(object):
         img_h,
         img_w,
         n_channels,
-        h1,
+        hidden_dimension_list,
         n_classes,
         epochs,
         batch_size,
@@ -25,7 +25,7 @@ class NeuralNetworkModel(object):
         self.img_h, self.img_w = img_h, img_w
         self.img_size_flat = self.img_h * self.img_w
         self.n_channels = n_channels
-        self.h1 = h1
+        self.hidden_dimension_list = hidden_dimension_list
         self.n_classes = n_classes
         self.epochs = epochs
         self.batch_size = batch_size
@@ -64,11 +64,12 @@ class NeuralNetworkModel(object):
         )
         y = tf.placeholder(tf.float32, shape=[None, self.n_classes], name="Y")
         channel_matrix = weight_variable('channel_matrix', [self.n_channels, 1])
-        x_one_channel = tf.squeeze(tf.matmul(x, channel_matrix), 2)
+        hidden_layer = tf.squeeze(tf.matmul(x, channel_matrix), 2)
         # Create a fully-connected layer with h1 nodes as hidden layer
-        fc1 = fc_layer(x_one_channel, self.h1, "FC1", use_relu=True)
+        for i, h in enumerate(self.hidden_dimension_list):
+            hidden_layer = fc_layer(hidden_layer, h, f"FC{i+1}", use_relu=True)
         # Create a fully-connected layer with n_classes nodes as output layer
-        output_logits = fc_layer(fc1, self.n_classes, "OUT", use_relu=False)
+        output_logits = fc_layer(hidden_layer, self.n_classes, "OUT", use_relu=False)
         # Define the loss function, optimizer, and accuracy
         loss = tf.reduce_mean(
             tf.nn.softmax_cross_entropy_with_logits(
@@ -176,7 +177,7 @@ if __name__ == "__main__":
         config.img_h,
         config.img_w,
         config.n_channels,
-        config.h1,
+        config.hidden_dimension_list,
         config.n_classes,
         config.epochs,
         config.batch_size,
