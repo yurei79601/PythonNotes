@@ -90,13 +90,12 @@ class NeuralNetworkModel:
         return x, y, output_logits, loss, optimizer, accuracy, cls_prediction, init
 
     def train(self):
-        # x_data, y_data = self.data_manager.load_data('train')
+        # x_data, y_data = self.data_manager.load_mnist_data('train')
         x_data, y_data = self.data_manager.load_cifar10_data('train')
         x_train, x_valid, y_train, y_valid = \
             train_test_split(
                 x_data, y_data, test_size=0.1, random_state=123
             )
-        # x_data, y_data, x_valid, y_valid = load_data("train")
         with self.session.as_default():
             print("Training")
             self.session.run(self.init)
@@ -145,7 +144,7 @@ class NeuralNetworkModel:
     def test(self):
         with self.session.as_default():
             print("Testing")
-            #x_test, y_test = self.data_manager.load_data("test")
+            #x_test, y_test = self.data_manager.load_mnist_data("test")
             x_test, y_test = self.data_manager.load_cifar10_data('test')
             select_index = np.random.choice(range(10000), 1000)
             feed_dict_test = {

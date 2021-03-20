@@ -33,7 +33,7 @@ class DataManager:
     def __init__(self, data_path):
         self.data_path = data_path
 
-    def load_data(self, mode):
+    def load_mnist_data(self, mode):
         from tensorflow.examples.tutorials.mnist import input_data
 
         mnist = input_data.read_data_sets(self.data_path, one_hot=True)
