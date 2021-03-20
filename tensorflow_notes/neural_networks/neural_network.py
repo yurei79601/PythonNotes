@@ -20,7 +20,6 @@ class NeuralNetworkModel:
         n_classes,
         epochs,
         batch_size,
-        display_freq,
         learning_rate,
         model_path,
         data_path
@@ -32,7 +31,6 @@ class NeuralNetworkModel:
         self.n_classes = n_classes
         self.epochs = epochs
         self.batch_size = batch_size
-        self.display_freq = display_freq
         self.learning_rate = learning_rate
         self.model_path = model_path
         self.save_path = os.path.join(self.model_path, "twolayernetwork")
@@ -119,7 +117,7 @@ class NeuralNetworkModel:
                     feed_dict_batch = {self.x: x_batch, self.y: y_batch}
                     self.session.run(self.optimizer, feed_dict=feed_dict_batch)
 
-                    if step % self.display_freq == 0:
+                    if step % 100 == 0:
                         # Calculate and display the batch loss and accuracy
                         loss_batch, acc_batch = self.session.run(
                             [self.loss, self.accuracy],
@@ -173,7 +171,6 @@ if __name__ == "__main__":
         config.n_classes,
         config.epochs,
         config.batch_size,
-        config.display_freq,
         config.learning_rate,
         config.model_path,
         config.data_path)
