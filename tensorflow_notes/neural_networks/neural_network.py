@@ -147,7 +147,8 @@ class NeuralNetworkModel:
     def test(self):
         with self.session.as_default():
             print("Testing")
-            x_test, y_test = self.data_manager.load_data("test")
+            #x_test, y_test = self.data_manager.load_data("test")
+            x_test, y_test = self.data_manager.load_cifar10_data('test')
             select_index = np.random.choice(range(10000), 1000)
             feed_dict_test = {
                 self.x: x_test[select_index], self.y: y_test[select_index]
@@ -177,4 +178,4 @@ if __name__ == "__main__":
         config.model_path,
         config.data_path)
 
-    NN_Model.train()
+    NN_Model.test()
