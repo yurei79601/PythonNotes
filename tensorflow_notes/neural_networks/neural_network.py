@@ -5,12 +5,12 @@ import os
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from model_utils import fc_layer
+from model_utils import fc_layer, weight_variable
 from data_manager import get_next_batch, randomize, DataManager
 import config
 
 
-class NeuralNetworkModel(object):
+class NeuralNetworkModel:
     def __init__(
         self,
         img_h,
@@ -62,9 +62,9 @@ class NeuralNetworkModel(object):
 
 
     def model(self):
-        x = tf.placeholder(
-            tf.float32, shape=[None, self.img_size_flat, self.n_channels], name="X"
-        )
+        x = tf.placeholder(tf.float32,
+                           shape=[None, self.img_size_flat, self.n_channels],
+                           name="X")
         y = tf.placeholder(tf.float32, shape=[None, self.n_classes], name="Y")
         channel_matrix = weight_variable('channel_matrix', [self.n_channels, 1])
         hidden_layer = tf.squeeze(tf.matmul(x, channel_matrix), 2)
@@ -74,21 +74,17 @@ class NeuralNetworkModel(object):
         # Create a fully-connected layer with n_classes nodes as output layer
         output_logits = fc_layer(hidden_layer, self.n_classes, "OUT", use_relu=False)
         # Define the loss function, optimizer, and accuracy
-        loss = tf.reduce_mean(
-            tf.nn.softmax_cross_entropy_with_logits(
-                labels=y, logits=output_logits
-            ),
-            name="loss",
-        )
-        optimizer = tf.train.AdamOptimizer(
-            learning_rate=self.learning_rate, name="Adam-op"
-        ).minimize(loss)
-        correct_prediction = tf.equal(
-            tf.argmax(output_logits, 1), tf.argmax(y, 1), name="correct_pred"
-        )
-        accuracy = tf.reduce_mean(
-            tf.cast(correct_prediction, tf.float32), name="accuracy"
-        )
+        loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(
+                                labels=y,
+                                logits=output_logits),
+                              name="loss")
+        optimizer = tf.train.AdamOptimizer(learning_rate=self.learning_rate,
+                                           name="Adam-op").minimize(loss)
+        correct_prediction = tf.equal(tf.argmax(output_logits, 1),
+                                      tf.argmax(y, 1),
+                                      name="correct_pred")
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32),
+                                  name="accuracy")
 
         # Network predictions
         cls_prediction = tf.argmax(output_logits, axis=1, name="predictions")
@@ -130,11 +126,8 @@ class NeuralNetworkModel(object):
                             feed_dict=feed_dict_batch,
                         )
 
-                        print(
-                            "step {0:3d}:\t Loss={1:.2f},\tTraining Accuracy={2:.01%}".format(
-                                step, loss_batch, acc_batch
-                            )
-                        )
+                        print(f"step {step:3d}:\t Loss={loss_batch:.2f}, \t"+\
+                              f"Training Accuracy={acc_batch:.01%}")
                 # Run validation after every epoch
                 feed_dict_valid = {
                     self.x: x_valid,
@@ -143,14 +136,10 @@ class NeuralNetworkModel(object):
                 loss_valid, acc_valid = self.session.run(
                     [self.loss, self.accuracy], feed_dict=feed_dict_valid
                 )
-                print(
-                    "---------------------------------------------------------"
-                )
-                print(
-                    "Epoch: {0}, validation loss: {1:.2f}, validation accuracy: {2:.01%}".format(
-                        epoch + 1, loss_valid, acc_valid
-                    )
-                )
+                print("---------------------------------------------------------")
+                print(f"Epoch: {epoch+1}, "+\
+                      f"validation loss: {loss_valid:.2f}, "+\
+                      f"validation accuracy: {acc_valid:.01%}")
                 print("---------------------------------------------------------")
 
         self.saver.save(self.session, self.save_path, global_step=self.epochs)
@@ -168,7 +157,8 @@ class NeuralNetworkModel(object):
                     [self.loss, self.accuracy, self.output_logits],
                     feed_dict=feed_dict_test)
         print('---------------------------------------------------------')
-        print("Test loss: {0:.2f}, test accuracy: {1:.01%}".format(loss_test, acc_test))
+        print(f"Test loss: {loss_test:.2f}, "+\
+              f"test accuracy: {acc_test:.01%}")
         print('---------------------------------------------------------')
         return np.argmax(y_pred, axis=1)
 
