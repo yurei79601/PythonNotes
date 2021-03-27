@@ -32,6 +32,10 @@ def one_hot_array(arr: np.array) -> np.array:
 class DataManager:
     def __init__(self, data_path):
         self.data_path = data_path
+        self.data_loader = {
+            'mnist': self.load_mnist_data,
+            'cifar10': self.load_cifar10_data
+        }
 
     def load_mnist_data(self, mode):
         from tensorflow.examples.tutorials.mnist import input_data
