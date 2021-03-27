@@ -22,7 +22,8 @@ class NeuralNetworkModel:
         batch_size,
         learning_rate,
         model_path,
-        data_path
+        data_path,
+        data_source
     ):
         self.img_h, self.img_w = img_h, img_w
         self.img_size_flat = self.img_h * self.img_w
@@ -33,7 +34,8 @@ class NeuralNetworkModel:
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.model_path = model_path
-        self.save_path = os.path.join(self.model_path, "twolayernetwork")
+        self.data_source = data_source
+        self.save_path = os.path.join(self.model_path, self.data_source)
         self.session = tf.InteractiveSession()
         self.data_manager = DataManager(data_path)
 
@@ -90,8 +92,7 @@ class NeuralNetworkModel:
         return x, y, output_logits, loss, optimizer, accuracy, cls_prediction, init
 
     def train(self):
-        # x_data, y_data = self.data_manager.load_mnist_data('train')
-        x_data, y_data = self.data_manager.load_cifar10_data('train')
+        x_data, y_data = self.data_manager.data_loader[self.data_source]('train')
         x_train, x_valid, y_train, y_valid = \
             train_test_split(
                 x_data, y_data, test_size=0.1, random_state=123
@@ -144,8 +145,7 @@ class NeuralNetworkModel:
     def test(self):
         with self.session.as_default():
             print("Testing")
-            #x_test, y_test = self.data_manager.load_mnist_data("test")
-            x_test, y_test = self.data_manager.load_cifar10_data('test')
+            x_test, y_test = self.data_manager.data_loader[self.data_source]('test')
             select_index = np.random.choice(range(10000), 1000)
             feed_dict_test = {
                 self.x: x_test[select_index], self.y: y_test[select_index]
