@@ -5,6 +5,7 @@ import os
 import numpy as np
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
+from utils import check_path_exists
 from model_utils import fc_layer, weight_variable
 from data_manager import get_next_batch, randomize, DataManager
 import config
@@ -13,11 +14,7 @@ import config
 class NeuralNetworkModel:
     def __init__(
         self,
-        img_h,
-        img_w,
-        n_channels,
         hidden_dimension_list,
-        n_classes,
         epochs,
         batch_size,
         learning_rate,
@@ -25,16 +22,16 @@ class NeuralNetworkModel:
         data_path,
         data_source
     ):
-        self.img_h, self.img_w = img_h, img_w
-        self.img_size_flat = self.img_h * self.img_w
-        self.n_channels = n_channels
-        self.hidden_dimension_list = hidden_dimension_list
-        self.n_classes = n_classes
+        self.data_source = data_source
+        self.data_description = config.data_description
+        self.img_size_flat = self.data_description[self.data_source]['image_size_flat']
+        self.n_channels = self.data_description[self.data_source]['n_channels']
+        self.n_classes = self.data_description[self.data_source]['n_classes']
         self.epochs = epochs
         self.batch_size = batch_size
+        self.hidden_dimension_list = hidden_dimension_list
         self.learning_rate = learning_rate
         self.model_path = model_path
-        self.data_source = data_source
         self.save_path = os.path.join(self.model_path, self.data_source)
         self.session = tf.InteractiveSession()
         self.data_manager = DataManager(data_path)
@@ -59,7 +56,7 @@ class NeuralNetworkModel:
                 print("Checkpoint is valid")
                 self.step = int(ckpt.split('/')[-1].split('-')[1])
                 self.saver.restore(self.session, ckpt)
-
+    
 
     def model(self):
         x = tf.placeholder(tf.float32,
@@ -92,6 +89,8 @@ class NeuralNetworkModel:
         return x, y, output_logits, loss, optimizer, accuracy, cls_prediction, init
 
     def train(self):
+        check_path_exists(self.model_path)
+
         x_data, y_data = self.data_manager.data_loader[self.data_source]('train')
         x_train, x_valid, y_train, y_valid = \
             train_test_split(
@@ -159,19 +158,3 @@ class NeuralNetworkModel:
               f"test accuracy: {acc_test:.01%}")
         print('---------------------------------------------------------')
         return np.argmax(y_pred, axis=1)
-
-
-if __name__ == "__main__":
-    NN_Model = NeuralNetworkModel(
-        config.img_h,
-        config.img_w,
-        config.n_channels,
-        config.hidden_dimension_list,
-        config.n_classes,
-        config.epochs,
-        config.batch_size,
-        config.learning_rate,
-        config.model_path,
-        config.data_path)
-
-    NN_Model.test()
