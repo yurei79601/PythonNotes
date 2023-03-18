@@ -50,6 +50,7 @@ def get_prime_factor_list(number: int) -> List[str]:
             quotient = number // i
             if is_prime(quotient):
                 prime_factor_list.append(quotient)
+            number = quotient
     return prime_factor_list
 
 
